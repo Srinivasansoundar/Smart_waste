@@ -3,6 +3,7 @@ const app = express();
 const ejsMate = require("ejs-mate")
 const path = require("path")
 const mongoose = require("mongoose");
+const MongoStore = require("connect-mongo");
 const methodOveride = require("method-override")
 const session = require("express-session")
 const passport = require("passport")
@@ -28,7 +29,7 @@ mongoose.connect(mongo_url)
         console.log("OH NO ERROR!!!!")
         console.log(err)
     })
-const sessionOption = { secret: "nottogoodsecret", resave: false, saveUninitialized: false }
+// const sessionOption = { secret: "nottogoodsecret", resave: false, saveUninitialized: false }
 const isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         req.session.returnTo = req.originalUrl;
@@ -59,7 +60,18 @@ app.engine("ejs", ejsMate)
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, "public")))
 app.use(methodOveride("_method"))
-app.use(session(sessionOption))
+// app.use(session(sessionOption))
+app.use(session({
+    secret: process.env.SESSION_SECRET || "defaultsecret",
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl:mongo_url, // Use your MongoDB connection string
+        collectionName: "sessions",
+        ttl: 24 * 60 * 60 // Session expiry time (1 day)
+    })
+}));
+
 app.use(passport.initialize())
 app.use(passport.session())
 passport.use('user-local',new localStrategy({
@@ -102,7 +114,7 @@ app.use((req, res, next) => {
     next();
 })
 // home
-app.get("/home", (req, res) => {
+app.get("/", (req, res) => {
     res.render("credential/home")
 })
 app.get("/admin_login", (req, res) => {
