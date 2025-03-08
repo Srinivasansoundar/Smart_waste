@@ -14,7 +14,13 @@ const Complain = require("./modal/complain.js")
 const User = require("./modal/user.js")
 const Admin=require("./modal/admin.js")
 const Worker=require("./modal/worker.js")
-mongoose.connect('mongodb://localhost:27017/waste')
+const cors=require('cors')
+require('dotenv').config();
+const mongo_url=process.env.MONGO
+const PORT=process.env.PORT || 8080
+app.use(cors())
+console.log(mongo_url)
+mongoose.connect(mongo_url)
     .then(() => {
         console.log("CONNECTION OPEN!!!")
     })
@@ -304,6 +310,6 @@ app.put("/driver_works/update_status/:id", async (req, res) => {
 
 
 })
-app.listen("3000", () => {
+app.listen(PORT, () => {
     console.log("APP IS LISTENING ON PORT 3000")
 })
