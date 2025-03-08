@@ -132,7 +132,7 @@ app.get("/admin_logout",(req,res,err)=>{
         }
         else {
             // req.flash("success", "Thank you for visiting the yelpcamp");
-            res.redirect("/home");
+            res.redirect("/");
         }
     })
 })
@@ -162,7 +162,7 @@ app.get("/user_logout", (req, res, next) => {
         }
         else {
             // req.flash("success", "Thank you for visiting the yelpcamp");
-            res.redirect("/home");
+            res.redirect("/");
         }
     })
 })
@@ -180,7 +180,7 @@ app.get("/driver_logout",(req,res)=>{
         }
         else {
             // req.flash("success", "Thank you for visiting the yelpcamp");
-            res.redirect("/home");
+            res.redirect("/");
         }
     })
 })
