@@ -54,7 +54,7 @@ const isDriver = (req, res, next) => {
     }
     next()
 }
-app.set("views")
+app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs")
 app.engine("ejs", ejsMate)
 app.use(express.urlencoded({ extended: true }))
